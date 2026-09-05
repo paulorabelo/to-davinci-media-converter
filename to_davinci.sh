@@ -15,37 +15,29 @@
 # video e audio, convertendo para formatos amigaveis ao DaVinci Resolve (MPEG4/PCM).
 # Ele cria uma subpasta chamada "convertidos" dentro de cada local encontrado.
 #
+# ------------------------------------------------------------------------ #
 # COMO USAR?
+# Modo padrão (cria pasta "convertidos" junto aos originais):
 # $ ./to_davinci.sh /caminho/para/os/videos
 #
+# Modo com destino personalizado:
+# $ ./to_davinci.sh /caminho/para/os/videos /caminho/para/destino
 # ------------------------------------------------------------------------ #
-# Changelog:
-#
-#   v1.0 07/03/2019, Mateus Muller:
-#     - Primeira versao.
-#   v1.1 23/09/2019, Mateus Muller:
-#     - Corrigido bug no find.
-#   v1.2 06/10/2019, Mateus Muller:
-#     - Adicionado "uniq".
-#   v2.0 22/11/2025, Paulo & Gemini 3.0:
-#     - Adicionado suporte HIBRIDO (Video e Audio no mesmo script).
-#     - Audio agora converte para .wav (PCM).
-#     - Video mantem conversao para .mov (MPEG4).
-#
-# ------------------------------------------------------------------------ #
-# Testado em:
-#   bash 5.0.3
-#   zsh 5.9
-# ------------------------------------------------------------------------ #
-#
-# -------------------------------VARIAVEIS----------------------------------------- #
+
 DESTINO_CONVERTER="$1"
+DIRETORIO_DESTINO_CUSTOM="$2"
 IFS=$'\n'
 
-# -------------------------------EXECUCAO----------------------------------------- #
-
-echo "=== INICIANDO CONVERSAO HIBRIDA (v2.0) ==="
+echo "=== INICIANDO CONVERSAO HIBRIDA (v2.1) ==="
 echo "Analise recursiva em: $DESTINO_CONVERTER"
+
+# Se o segundo argumento foi informado, valida ou cria a pasta de destino global
+if [ -n "$DIRETORIO_DESTINO_CUSTOM" ]; then
+    mkdir -p "$DIRETORIO_DESTINO_CUSTOM"
+    echo "Destino personalizado definido: $DIRETORIO_DESTINO_CUSTOM"
+else
+    echo "Destino: Pasta 'convertidos' local ao lado dos originais"
+fi
 echo "------------------------------------------"
 
 # 1. Busca DIRETORIOS que contenham videos OU audios
@@ -62,10 +54,15 @@ for diretorio_conversao in $(find "$DESTINO_CONVERTER" -type f \( \
                                                                sort | \
                                                                uniq)
 do
-    # Cria a pasta 'convertidos' DENTRO do diretorio onde achou os arquivos
-    if [ ! -d "$diretorio_conversao/convertidos" ]; then
-        echo "Criando pasta: $diretorio_conversao/convertidos"
-        mkdir "$diretorio_conversao/convertidos"
+    # Define o caminho de saida dinamicamente
+    if [ -n "$DIRETORIO_DESTINO_CUSTOM" ]; then
+        CAMINHO_SAIDA="$DIRETORIO_DESTINO_CUSTOM"
+    else
+        CAMINHO_SAIDA="$diretorio_conversao/convertidos"
+        if [ ! -d "$CAMINHO_SAIDA" ]; then
+            echo "Criando pasta: $CAMINHO_SAIDA"
+            mkdir -p "$CAMINHO_SAIDA"
+        fi
     fi
 
     # 2. Busca ARQUIVOS dentro dessas pastas para processar
@@ -84,9 +81,6 @@ do
       # Pega a extensao do arquivo e converte para minuscula
       EXTENSAO="${arquivo_conversao##*.}"
       EXTENSAO="${EXTENSAO,,}" 
-
-      # Define o caminho de saida (agora local)
-      CAMINHO_SAIDA="$diretorio_conversao/convertidos"
 
       # --- LOGICA DE DECISAO ---
       
@@ -113,7 +107,6 @@ do
 
           if [ ! -f "$CAMINHO_SAIDA/$NOME_SAIDA" ]; then
             echo "[AUDIO] Convertendo: $arquivo_conversao"
-            # Flag -vn garante que ignoramos video (capas de album, etc)
             ffmpeg -v error -i "$diretorio_conversao/$arquivo_conversao" \
                    -vn \
                    -codec:a pcm_s16le \
