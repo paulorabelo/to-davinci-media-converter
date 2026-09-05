@@ -33,12 +33,15 @@ Este script converte **recursivamente** todos os arquivos de uma pasta para code
 - ✅ **Codecs Otimizados:** Qualidade máxima para edição (sem perdas visuais/sonoras)
 - ✅ **Zero Dependências Extras:** Apenas / + 
 
-🛠 Requisitos 
-bash ou zsh
-ffmpeg 
-Bash 
+## 🛠️ Requisitos
+
+- `bash` ou `zsh`
+- `ffmpeg`
+
+```Bash
 # Para instalar o ffmpeg no Ubuntu/Mint/Debian:
 sudo apt install ffmpeg
+```
 
 > **Testado em:** Linux Mint 21+, Ubuntu 20.04+, Debian 11+, Fedora 38+, Arch Linux
 
