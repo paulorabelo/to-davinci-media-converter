@@ -33,32 +33,12 @@ Este script converte **recursivamente** todos os arquivos de uma pasta para code
 - ✅ **Codecs Otimizados:** Qualidade máxima para edição (sem perdas visuais/sonoras)
 - ✅ **Zero Dependências Extras:** Apenas / + 
 
-## 🛠️ Requisitos
-
-| Ferramenta | Instalação (Ubuntu/Mint/Debian) |
-|------------|----------------------------------|
-|  ou  | Já incluído no sistema |
-|  | Hit:1 https://download.docker.com/linux/ubuntu noble InRelease
-Hit:2 http://sa-saopaulo-1-ad-1.clouds.archive.ubuntu.com/ubuntu noble InRelease
-Get:3 http://sa-saopaulo-1-ad-1.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
-Get:4 https://esm.ubuntu.com/apps/ubuntu noble-apps-security InRelease [8371 B]
-Get:5 https://esm.ubuntu.com/apps/ubuntu noble-apps-updates InRelease [8220 B]
-Get:6 https://esm.ubuntu.com/infra/ubuntu noble-infra-security InRelease [8235 B]
-Get:7 https://esm.ubuntu.com/infra/ubuntu noble-infra-updates InRelease [8213 B]
-Hit:8 http://sa-saopaulo-1-ad-1.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease
-Get:9 http://sa-saopaulo-1-ad-1.clouds.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1260 kB]
-Get:10 http://sa-saopaulo-1-ad-1.clouds.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1536 kB]
-Hit:11 http://security.ubuntu.com/ubuntu noble-security InRelease
-Fetched 2955 kB in 8s (356 kB/s)
-Reading package lists...
-Building dependency tree...
-Reading state information...
-All packages are up to date.
-Reading package lists...
-Building dependency tree...
-Reading state information...
-ffmpeg is already the newest version (7:6.1.1-3ubuntu5+esm13).
-0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded. |
+🛠 Requisitos 
+bash ou zsh
+ffmpeg 
+Bash 
+# Para instalar o ffmpeg no Ubuntu/Mint/Debian:
+sudo apt install ffmpeg
 
 > **Testado em:** Linux Mint 21+, Ubuntu 20.04+, Debian 11+, Fedora 38+, Arch Linux
 
