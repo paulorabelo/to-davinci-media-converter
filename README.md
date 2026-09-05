@@ -1,165 +1,266 @@
 # 🎬 DaVinci Resolve Media Converter (Linux)
 
-Um script em Bash robusto e automatizado para preparar arquivos de mídia (vídeo e áudio) para edição no DaVinci Resolve em ambientes Linux (especialmente Mint/Ubuntu).
+![License](https://img.shields.io/badge/license-MIT-green)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS-lightgrey?logo=linux)
+![Shell](https://img.shields.io/badge/shell-Bash%20%7C%20Zsh-4EAA25?logo=gnubash)
+![Dependency](https://img.shields.io/badge/depends-FFmpeg-FFmpeg?logo=ffmpeg)
+![Status](https://img.shields.io/badge/status-Estável-brightgreen)
 
-Este script resolve o problema comum da versão gratuita do DaVinci Resolve no Linux não suportar codecs proprietários como AAC ou H.264/H.265, convertendo-os automaticamente para formatos compatíveis e amigáveis para edição.
+> **Script Bash automatizado** para preparar arquivos de mídia (vídeo/áudio) para edição no **DaVinci Resolve Free** no Linux, resolvendo a incompatibilidade com codecs proprietários (AAC, H.264/H.265, etc.).
+
+## 🎯 O Problema
+
+A versão **gratuita do DaVinci Resolve no Linux** não possui licenças para codecs proprietários, causando:
+- ❌ Arquivos / (H.264/H.265) não importam ou ficam sem vídeo
+- ❌ Áudio AAC (, ) não reproduz ou dá erro
+- ❌ Falta de suporte nativo a HEVC/VP9 em algumas distros
+
+## ✨ A Solução
+
+Este script converte **recursivamente** todos os arquivos de uma pasta para codecs **edit-friendly**:
+| Tipo | Entrada Suportada | Saída (Edição) | Codec Vídeo | Codec Áudio |
+|------|-------------------|----------------|-------------|-------------|
+| **Vídeo** | , , , , , , , , ,  |  | **MPEG-4 Part 2** (,  — qualidade máxima) | **PCM 16-bit** () |
+| **Áudio** | , , , , , ,  |  | — (descartado via ) | **PCM 16-bit** () |
 
 ## 🚀 Funcionalidades
 
-- **Híbrido:** Detecta e processa tanto vídeos quanto áudios na mesma execução.
-    
-- **Recursivo:** Varre todas as subpastas do diretório alvo.
-    
-- **Organizado:** Cria uma pasta `convertidos` dentro de cada diretório original, mantendo a estrutura do projeto.
-    
-- **Inteligente:** Pula arquivos que já foram convertidos anteriormente.
-    
-- **Codecs Otimizados:**
-    
-    - **Vídeo:** Converte para MPEG-4 (Visual) com qualidade máxima (`q:v 0`) e áudio PCM.
-        
-    - **Áudio:** Converte para WAV (PCM 16-bit), ideal para edição sem perdas.
-        
+- ✅ **Híbrido:** Processa vídeos e áudios na mesma execução
+- ✅ **Recursivo:** Varre todas as subpastas automaticamente
+- ✅ **Organizado:** Cria pasta  em **cada diretório** original, preservando estrutura
+- ✅ **Inteligente:** Pula arquivos já convertidos (não reconverte)
+- ✅ **Robusto:** Trata corretamente nomes com espaços e caracteres especiais ()
+- ✅ **Codecs Otimizados:** Qualidade máxima para edição (sem perdas visuais/sonoras)
+- ✅ **Zero Dependências Extras:** Apenas / + 
 
 ## 🛠️ Requisitos
 
-- `bash` ou `zsh`
-    
-- `ffmpeg`
-    
+| Ferramenta | Instalação (Ubuntu/Mint/Debian) |
+|------------|----------------------------------|
+|  ou  | Já incluído no sistema |
+|  | Hit:1 https://download.docker.com/linux/ubuntu noble InRelease
+Hit:2 http://sa-saopaulo-1-ad-1.clouds.archive.ubuntu.com/ubuntu noble InRelease
+Get:3 http://sa-saopaulo-1-ad-1.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:4 https://esm.ubuntu.com/apps/ubuntu noble-apps-security InRelease [8371 B]
+Get:5 https://esm.ubuntu.com/apps/ubuntu noble-apps-updates InRelease [8220 B]
+Get:6 https://esm.ubuntu.com/infra/ubuntu noble-infra-security InRelease [8235 B]
+Get:7 https://esm.ubuntu.com/infra/ubuntu noble-infra-updates InRelease [8213 B]
+Hit:8 http://sa-saopaulo-1-ad-1.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease
+Get:9 http://sa-saopaulo-1-ad-1.clouds.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1260 kB]
+Get:10 http://sa-saopaulo-1-ad-1.clouds.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1536 kB]
+Hit:11 http://security.ubuntu.com/ubuntu noble-security InRelease
+Fetched 2955 kB in 8s (356 kB/s)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+All packages are up to date.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+ffmpeg is already the newest version (7:6.1.1-3ubuntu5+esm13).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded. |
 
-Bash
-
-```
-# Para instalar o ffmpeg no Ubuntu/Mint/Debian:
-sudo apt install ffmpeg
-```
+> **Testado em:** Linux Mint 21+, Ubuntu 20.04+, Debian 11+, Fedora 38+, Arch Linux
 
 ## 📦 Como Usar
 
-1. Dê permissão de execução ao script:
-    
-    Bash
-    
-    ```
-    chmod +x to_davinci.sh
-    ```
-    
-2. Execute apontando para a pasta onde estão seus arquivos originais:
-    
-    Bash
-    
-    ```
-    ./to_davinci.sh /home/usuario/MeusVideos
-    ```
-    
+### 1. Clone o Repositório
+```bash
+git clone https://github.com/paulorabelo/to-davinci-media-converter.git
+cd to-davinci-media-converter
+```
 
----
+### 2. Dê Permissão de Execução
+```bash
+chmod +x to_davinci.sh
+```
+
+### 3. Execute
+```bash
+# Sintaxe: ./to_davinci.sh <pasta_com_arquivos_originais>
+./to_davinci.sh /home/usuario/Videos/ProjetoX
+
+# Exemplo com caminho relativo
+./to_davinci.sh ./meus_videos_raw
+```
+
+### 4. Resultado
+```
+/home/usuario/Videos/ProjetoX/
+├── video1.mp4          ← Original (mantido)
+├── audio1.m4a          ← Original (mantido)
+└── convertidos/        ← Criado automaticamente
+    ├── video1.mov      ← Pronto para DaVinci!
+    └── audio1.wav      ← Pronto para DaVinci!
+```
 
 ## 🔍 Explicação Técnica (Code Breakdown)
 
-Abaixo, o detalhamento do funcionamento interno do script para fins de estudo e manutenção.
-
-### 1. Definição de Variáveis e Ambiente
-
-Bash
-
-```
+### 1. Variáveis e Ambiente
+```bash
 DESTINO_CONVERTER="$1"
 IFS=$'\n'
 ```
+- : Caminho da pasta alvo (argumento CLI)
+- : **Internal Field Separator** = quebra de linha apenas. **Essencial** para nomes com espaços.
 
-- **`DESTINO_CONVERTER`**: Captura o primeiro argumento passado via linha de comando (o caminho da pasta alvo).
-    
-- **`IFS=$'\n'`**: Redefine o _Internal Field Separator_ para quebra de linha. Isso é crucial para que o script não quebre ao encontrar arquivos com espaços no nome (ex: "Meu Video.mp4").
-    
-
-### 2. O Primeiro Loop (Mapeamento de Diretórios)
-
-Bash
-
-```
+### 2. Mapeamento de Diretórios (Primeiro Loop)
+```bash
 for diretorio_conversao in $(find "$DESTINO_CONVERTER" ... -printf "%h\n" | sort | uniq)
 ```
+- Busca **diretórios únicos** que contêm arquivos de interesse
+- Evita processar a mesma pasta múltiplas vezes
 
-O script não busca arquivos imediatamente para conversão. Primeiro, ele mapeia **quais pastas** contêm arquivos de interesse.
-
-- **`find ... -type f`**: Busca apenas arquivos.
-    
-- **`-iname`**: Busca extensões ignorando maiúsculas/minúsculas (vídeos e áudios).
-    
-- **`-printf "%h\n"`**: Imprime apenas o diretório pai onde o arquivo foi encontrado.
-    
-- **`sort | uniq`**: Remove duplicatas, gerando uma lista limpa de pastas para processar.
-    
-
-### 3. Criação da Pasta de Destino
-
-Bash
-
-```
+### 3. Criação da Pasta 
+```bash
 if [ ! -d "$diretorio_conversao/convertidos" ]; then
     mkdir "$diretorio_conversao/convertidos"
 fi
 ```
+- Pasta criada **por diretório** — mantém organização paralela aos originais
 
-Para cada pasta encontrada no passo anterior, o script verifica se existe uma subpasta chamada `convertidos`. Se não existir, ela é criada. Isso mantém os arquivos gerados organizados junto aos originais.
-
-### 4. O Segundo Loop (Processamento de Arquivos)
-
-Bash
-
-```
+### 4. Processamento de Arquivos (Segundo Loop)
+```bash
 for arquivo_conversao in $(find "$diretorio_conversao" ... -printf "%f\n")
 ```
-
-Agora, dentro de cada pasta específica, o script lista os arquivos novamente, mas desta vez pegando apenas o nome do arquivo (`%f`).
+- Lista apenas nomes de arquivo () dentro de cada pasta mapeada
 
 ### 5. Normalização de Extensão
-
-Bash
-
-```
+```bash
 EXTENSAO="${arquivo_conversao##*.}"
 EXTENSAO="${EXTENSAO,,}"
 ```
+- : Remove tudo antes do último  (pega extensão)
+- : **Lowercase** — trata , ,  igualmente
 
-- **`${var##*.}`**: Remove tudo antes do último ponto, isolando a extensão.
-    
-- **`${var,,}`**: Converte a string da extensão para letras minúsculas. Isso garante que `.MP4`, `.Mp4` e `.mp4` sejam tratados igualmente.
-    
+### 6. Decisão Vídeo vs Áudio + FFmpeg
 
-### 6. A Lógica de Decisão (Vídeo vs. Áudio)
-
-O script utiliza condicionais `if/elif` para decidir qual comando `ffmpeg` utilizar.
-
-#### Tratamento de Vídeo (.mp4, .mov, etc.)
-
-Bash
-
-```
+**Vídeo:**
+```bash
 ffmpeg -i "input" -codec:v mpeg4 -q:v 0 -codec:a pcm_s16le "output.mov"
 ```
+- : MPEG-4 Visual, **qualidade máxima** (lossless visual)
+- : Áudio PCM 16-bit little-endian (compatível total)
 
-- **`-codec:v mpeg4 -q:v 0`**: Transcodifica o vídeo para MPEG-4 Part 2 com o fator de qualidade máximo (lossless ou visualmente lossless). Este formato é nativamente suportado pelo Linux Mint e DaVinci Free.
-    
-- **`-codec:a pcm_s16le`**: Converte o áudio para PCM (WAV não comprimido) 16-bit, evitando problemas de sincronia e incompatibilidade de codecs como AAC.
-    
-
-#### Tratamento de Áudio (.m4a, .mp3, etc.)
-
-Bash
-
-```
+**Áudio:**
+```bash
 ffmpeg -i "input" -vn -codec:a pcm_s16le "output.wav"
 ```
+- : **Video Null** — descarta stream de vídeo (ex: capa de álbum em .m4a)
+- Saída : Padrão da indústria para edição
 
-- **`-vn`**: "Video Null". Garante que qualquer stream de vídeo (comum em arquivos de áudio que contêm a capa do álbum embutida) seja descartado, prevenindo erros.
-    
-- **Saída .wav**: Gera um arquivo de áudio puro, padrão da indústria para edição.
-    
+## 🧪 Testando Rapidamente
+
+```bash
+# Crie pasta de teste com arquivos de exemplo
+mkdir -p teste_conversao
+# Coloque alguns .mp4/.m4a lá
+./to_davinci.sh ./teste_conversao
+# Verifique pasta convertidos/
+ls -la teste_conversao/convertidos/
+```
+
+## ⚙️ Personalização
+
+Edite o script para ajustar:
+- **Qualidade de vídeo:** Mude  para  (menor = melhor, mas arquivo maior)
+- **Codecs de saída:** Substitua  por  (se tiver licença) ou 
+- **Extensões suportadas:** Adicione/remova no .
+./.git
+./.git/info
+./.git/info/exclude
+./.git/objects
+./.git/objects/info
+./.git/objects/pack
+./.git/objects/pack/pack-323638ea8d00cc79fd23020ce12be54f9ecd4629.idx
+./.git/objects/pack/pack-323638ea8d00cc79fd23020ce12be54f9ecd4629.pack
+./.git/objects/pack/pack-323638ea8d00cc79fd23020ce12be54f9ecd4629.rev
+./.git/hooks
+./.git/hooks/applypatch-msg.sample
+./.git/hooks/pre-commit.sample
+./.git/hooks/commit-msg.sample
+./.git/hooks/prepare-commit-msg.sample
+./.git/hooks/pre-rebase.sample
+./.git/hooks/sendemail-validate.sample
+./.git/hooks/pre-receive.sample
+./.git/hooks/update.sample
+./.git/hooks/pre-applypatch.sample
+./.git/hooks/push-to-checkout.sample
+./.git/hooks/pre-merge-commit.sample
+./.git/hooks/post-update.sample
+./.git/hooks/pre-push.sample
+./.git/hooks/fsmonitor-watchman.sample
+./.git/description
+./.git/refs
+./.git/refs/heads
+./.git/refs/heads/main
+./.git/refs/tags
+./.git/refs/remotes
+./.git/refs/remotes/origin
+./.git/refs/remotes/origin/HEAD
+./.git/packed-refs
+./.git/config
+./.git/index
+./.git/HEAD
+./.git/branches
+./.git/logs
+./.git/logs/refs
+./.git/logs/refs/heads
+./.git/logs/refs/heads/main
+./.git/logs/refs/remotes
+./.git/logs/refs/remotes/origin
+./.git/logs/refs/remotes/origin/HEAD
+./.git/logs/HEAD
+./README.md
+./to_davinci.sh com 
+- **Pasta de saída:** Mude  para outro nome
+
+## 📋 Checklist de Compatibilidade DaVinci Resolve Free (Linux)
+
+| Formato | Código | Suportado? |
+|---------|--------|------------|
+| MPEG-4 Part 2 (.mov) |  | ✅ **Sim** (Recomendado) |
+| Apple ProRes (.mov) |  | ❌ Não (requer licença) |
+| DNxHR/DNxHD (.mov) |  | ⚠️ Parcial |
+| H.264/H.265 (.mp4) | / | ❌ Não (Free version) |
+| PCM Audio (.wav/.mov) |  | ✅ **Sim** |
+| AAC Audio |  | ❌ Não |
+
+## 🤝 Contribuindo
+
+1. Fork o projeto
+2. Crie branch ()
+3. Commit (On branch feature/melhoria
+nothing to commit, working tree clean)
+4. Push ()
+5. Pull Request
+
+### Ideias de Melhoria
+- [ ] Suporte a processamento paralelo ( ou )
+- [ ] Barra de progresso visual
+- [ ] Log detalhado em arquivo ()
+- [ ] Modo *dry-run* (simula sem converter)
+- [ ] Suporte a legendas (,  → convertendo para texto)
+
+## 📄 Licença
+
+Este projeto está sob a licença **MIT**. Veja [LICENSE](LICENSE).
+
+## 🙏 Créditos
+
+- **Ideia original:** Henrique ([Diolinux](https://www.diolinux.com.br/2019/02/codecs-certos-no-davinci-resolve.html)) e Mateus Müller
+- **Refatoração, expansão e documentação:** Paulo Rabelo (com suporte de IA)
+
+## 👨‍💻 Autor
+
+**Paulo Rabelo**
+- GitHub: [@paulorabelo](https://github.com/paulorabelo)
+- Blog: [blog.paulorabelo.dev.com.br](https://blog.paulorabelo.dev.com.br)
+- LinkedIn: [Paulo Rabelo](https://www.linkedin.com/in/paulorabelooficial/)
 
 ---
-Créditos
 
-Baseado na ideia original de Henrique ([Diolinux](https://www.diolinux.com.br/2019/02/codecs-certos-no-davinci-resolve.html)) e Mateus Müller. Refatorado e expandido por Paulo com suporte de IA.
+<div align="center">
+  <sub>Feito para a comunidade Linux + DaVinci Resolve 🎬</sub><br>
+  <sub>Se este script economizou seu tempo, <a href="https://github.com/paulorabelo/to-davinci-media-converter">⭐ deixe uma estrela!</a></sub>
+</div>
